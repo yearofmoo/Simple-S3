@@ -1,13 +1,13 @@
 class SimpleS3
 
-  def config
+  def self.config
     if @config.nil?
       @config = YAML.load('./simple-s3.yml')
     end
     @config
   end
 
-  def upload!
+  def self.upload!
     bucket      = @config['bucket'].to_s
     raise 'Simple-S3: Bucket not defined' if bucket.length == 0
 
