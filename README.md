@@ -14,10 +14,22 @@ Setup a file called `simple-s3.yml` with the following information:
 s3_bucket: '...'
 s3_access_key: '...'
 s3_secret_key: '...'
-cloudfront_distribution_id: '...'
+cloudfront_distribution_id: '...' # (optional)
 ```
 
 And then run the command `simple-s3` from the command line within the same directory where your simple-s3.yml file is saved.
+
+You can also include the library directly into another file (like a Rakefile for example):
+
+```ruby
+require 'rubygems'
+require 'simple-s3'
+
+# do some stuff
+# run the uploader
+SimpleS3::run!
+# do other stuff
+```
 
 ## Excluding Files
 
@@ -38,7 +50,7 @@ You can also include specific files for the upload
 
 ```yaml
 include_files:
-- **/* #default
+- "**/*" #default
 - /path/to/some/other/file.rb
 
 # ... the rest of the simple-s3.yml file
