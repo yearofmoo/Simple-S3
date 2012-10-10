@@ -27,7 +27,7 @@ require 'simple-s3'
 
 # do some stuff
 # run the uploader
-SimpleS3::run!
+SimpleS3.run!
 # do other stuff
 ```
 
