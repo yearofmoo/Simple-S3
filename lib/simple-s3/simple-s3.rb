@@ -2,7 +2,7 @@ class SimpleS3
 
   def self.config
     if @config.nil?
-      @config = YAML.load('./simple-s3.yml')
+      @config = YAML.load_file('./simple-s3.yml')
     end
     @config
   end
