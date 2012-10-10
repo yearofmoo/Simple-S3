@@ -8,18 +8,25 @@ class SimpleS3
   end
 
   def upload!
-    exclude     = @config['exclude_files']
-    inc         = @config['include_files']
-    bucket      = @config['bucket']
-    metadata    = @config['metadata'] || {}
+    bucket      = @config['bucket'].to_s
+    raise 'Simple-S3: Bucket not defined' if bucket.length == 0
 
+    exclude     = @config['exclude_files'] || []
+    inc         = @config['include_files'] || './**/*'
+    metadata    = @config['metadata'] || {}
     metadata[:access] ||= 'public-read'
 
     files = []
     Dir[inc].each do |file|
       name = File.basename(file)
-      files.push(file) unless exclude.include?(name)
+      found = false
+      exclude.each do |ex|
+        found = true if file.start_with?(ex) || ex == name
+      end
+      files.push(file) unless found
     end
+
+    raise 'Simple-S3: No files found' if files.length == 0
 
     AWS::S3::Base.establish_connection!(
       :access_key_id     => @config['access_key'],
@@ -28,7 +35,7 @@ class SimpleS3
 
     files.each do |file|
       base_name = File.basename(file)
-      puts "Uploading #{file} as '#{base_name}' to '#{bucket}'"
+      puts "Simple-S3: Uploading #{file} as '#{base_name}' to '#{bucket}'"
       AWS::S3::S3Object.store(
         base_name,
         File.open(file),
@@ -37,7 +44,7 @@ class SimpleS3
       )
     end
 
-    puts "Completed!"
+    puts "Simple-S3: Upload Completed!"
   end
 
 end
