@@ -2,16 +2,24 @@ class SimpleS3
 
   def self.config
     if @config.nil?
-      @config = YAML.load_file('./simple-s3.yml')
+      path = './simple-s3.yml'
+      raise "Simple-S3: Config file not found #{path}" unless File.exist?(path)
+      @config = YAML.load_file(path)
     end
     @config
   end
 
+  def self.default_exclude_files
+    ['.git', '.rvmrc', 'Gemfile', 'Gemfile.lock', '.gitignore', '.gitmodules']
+  end
+
   def self.upload!
+    @config = config
     bucket      = @config['bucket'].to_s
     raise 'Simple-S3: Bucket not defined' if bucket.length == 0
 
-    exclude     = @config['exclude_files'] || []
+    exclude     = @config['exclude_files'] || self.default_exclude_files
+    exclude.push('simple-s3.yml')
     inc         = @config['include_files'] || './**/*'
     metadata    = @config['metadata'] || {}
     metadata[:access] ||= 'public-read'
@@ -40,7 +48,7 @@ class SimpleS3
         base_name,
         File.open(file),
         bucket,
-        meta_data
+        metadata
       )
     end
 
