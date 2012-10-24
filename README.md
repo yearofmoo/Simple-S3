@@ -55,3 +55,9 @@ include_files:
 
 # ... the rest of the simple-s3.yml file
 ```
+
+## More Info
+
+Click here to view more information about this amazing gem.
+
+http://www.yearofmoo.com/2012/10/launch-a-static-website-with-simple-s3.html
