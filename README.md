@@ -11,6 +11,8 @@ source :rubygems
 gem "simple-s3"
 ``` 
 
+Then run `bundle install` or `rvmsudo bundle install` if you're using **RVM**.
+
 ## Usage
 
 Setup a file called `simple-s3.yml` with the following information:
