@@ -49,6 +49,9 @@ class SimpleS3
     files = []
     inc.each do |ii|
       Dir[ii].each do |file|
+        path = File.expand_path(file)
+        next if File.directory?(path)
+
         name = File.basename(file)
         found = false
         exclude.each do |ex|
@@ -66,11 +69,12 @@ class SimpleS3
     )
 
     files.each do |file|
-      base_name = File.basename(file)
-      puts "Simple-S3: Uploading #{file} as '#{base_name}' to '#{bucket}'"
+      path = File.expand_path(file)
+      final_file = file.gsub(/^\.\//, '')
+      puts "Simple-S3: Uploading #{file} as '#{final_file}' to '#{bucket}'"
       AWS::S3::S3Object.store(
-        base_name,
-        File.open(file),
+        final_file,
+        File.open(path),
         bucket,
         metadata
       )

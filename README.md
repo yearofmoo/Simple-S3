@@ -4,7 +4,12 @@ A super simple uploader for S3 using Ruby.
 
 ## Installation
 
-Install as a gem using `gem install simple-s3`.
+Install as a gem using `gem install simple-s3` or place a `Gemfile` within your website directory with the following info:
+
+```gemfile
+source :rubygems
+gem "simple-s3"
+``` 
 
 ## Usage
 
