@@ -25,6 +25,10 @@ class SimpleS3
     self.config['s3_bucket']
   end
 
+  def self.s3_server
+    self.config['s3_server']
+  end
+
   def self.cloudfront_distribution_id
     self.config['cloudfront_distribution_id']
   end
@@ -65,8 +69,10 @@ class SimpleS3
 
     AWS::S3::Base.establish_connection!(
       :access_key_id     => self.s3_access_key,
-      :secret_access_key => self.s3_secret_key
+      :secret_access_key => self.s3_secret_key,
+      :server =>  self.s3_server
     )
+
 
     files.each do |file|
       path = File.expand_path(file)
