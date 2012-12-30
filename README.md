@@ -3,7 +3,7 @@
 A super simple uploader for S3 using Ruby.
 
 ## *Updates*
-- **Dec 30th 2012**: Added the `s3_bucket_endpoint` configuration parameter to suit S3 buckets that are not in the standard US zone
+- **Dec 30th 2012**: Added the `s3_bucket_endpoint` configuration parameter to suit S3 buckets that are not in the standard S3 zone (which is **s3.amazonaws.com** by default).
 
 ## Installation
 
