@@ -25,6 +25,10 @@ class SimpleS3
     self.config['s3_bucket']
   end
 
+  def self.s3_bucket_endpoint
+    self.config['s3_bucket_endpoint']
+  end
+
   def self.cloudfront_distribution_id
     self.config['cloudfront_distribution_id']
   end
@@ -34,16 +38,10 @@ class SimpleS3
     self.invalidate!
   end
 
-  def self.upload!
-    bucket      = self.s3_bucket
-    raise 'Simple-S3: Bucket not defined' if bucket.length == 0
-
-    exclude     = config['exclude_files'] || []
+  def self.get_files(config)
+    exclude  = config['exclude_files'] || []
     exclude |= self.default_exclude_files
-    inc         = config['include_files'] || './**/*'
-    metadata    = config['metadata'] || {}
-    metadata[:access] ||= 'public-read'
-
+    inc      = config['include_files'] || './**/*'
     inc = [inc] unless inc.is_a?(Array)
 
     files = []
@@ -60,6 +58,24 @@ class SimpleS3
         files.push(file) unless found
       end
     end
+
+    files
+  end
+
+  def self.upload!
+    bucket      = self.s3_bucket
+    raise 'Simple-S3: Bucket not defined' if bucket.length == 0
+
+    metadata    = config['metadata'] || {}
+    metadata[:access] ||= 'public-read'
+
+    endpoint = self.s3_bucket_endpoint.to_s
+    if endpoint.length > 0
+      puts "Simple-S3: Changing the bucket endpoint to: '#{endpoint}'"
+      AWS::S3::DEFAULT_HOST.replace(endpoint)
+    end
+
+    files = self.get_files(config)
 
     raise 'Simple-S3: No files found' if files.length == 0
 

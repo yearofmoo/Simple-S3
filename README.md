@@ -2,6 +2,9 @@
 
 A super simple uploader for S3 using Ruby.
 
+## *Updates*
+- Added the `s3_bucket_endpoint` configuration parameter to suit S3 buckets that are not in the standard US zone
+
 ## Installation
 
 Install as a gem using `gem install simple-s3` or place a `Gemfile` within your website directory with the following info:
@@ -22,6 +25,7 @@ s3_bucket: '...'
 s3_access_key: '...'
 s3_secret_key: '...'
 cloudfront_distribution_id: '...' # (optional)
+s3_bucket_endpoint: '...' # (set this if you're not in the standard US zone)
 ```
 
 And then run the command `simple-s3` from the command line within the same directory where your simple-s3.yml file is saved.
