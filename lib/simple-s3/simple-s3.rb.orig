@@ -25,8 +25,13 @@ class SimpleS3
     self.config['s3_bucket']
   end
 
+<<<<<<< HEAD
   def self.s3_bucket_endpoint
     self.config['s3_bucket_endpoint']
+=======
+  def self.s3_server
+    self.config['s3_server']
+>>>>>>> 1326402ed8d3c30b23ca21c2c20d19337e6a9c8f
   end
 
   def self.cloudfront_distribution_id
@@ -69,27 +74,22 @@ class SimpleS3
     metadata    = config['metadata'] || {}
     metadata[:access] ||= 'public-read'
 
+    endpoint = self.s3_bucket_endpoint.to_s
+    if endpoint.length > 0
+      puts "Simple-S3: Changing the bucket endpoint to: '#{endpoint}'"
+      AWS::S3::DEFAULT_HOST.replace(endpoint)
+    end
+
     files = self.get_files(config)
 
     raise 'Simple-S3: No files found' if files.length == 0
 
-    new_endpoint = self.s3_bucket_endpoint.to_s
-    if new_endpoint.length > 0
-      old_endpoint = AWS::S3::DEFAULT_HOST.to_s
-      puts "Simple-S3: Changing the bucket endpoint from '#{old_endpoint}' to '#{new_endpoint}'"
-      AWS::S3::DEFAULT_HOST.replace(new_endpoint)
-    end
-
-    s3_auth_options = {
+    AWS::S3::Base.establish_connection!(
       :access_key_id     => self.s3_access_key,
-      :secret_access_key => self.s3_secret_key
-    }
+      :secret_access_key => self.s3_secret_key,
+      :server =>  self.s3_server
+    )
 
-    begin
-      AWS::S3::Base.establish_connection!(s3_auth_options)
-    rescue Exception => e
-      raise 'Simple-S3: Unable to establish connection to AWS (this may because of an invalid bucket name)'
-    end
 
     files.each do |file|
       path = File.expand_path(file)
