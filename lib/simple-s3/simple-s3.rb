@@ -116,7 +116,7 @@ class SimpleS3
     path = ['/','/*','/**/*']
 
     date = Time.now.strftime("%a, %d %b %Y %H:%M:%S %Z")
-    digest = Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha1'), aws_secret, date)).strip
+    digest = Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), aws_secret, date)).strip
     uri = URI.parse("https://cloudfront.amazonaws.com/2012-07-01/distribution/#{distribution}/invalidation")
 
     path_xml = ''
